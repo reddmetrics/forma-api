@@ -70,7 +70,7 @@ cd forma-api
 cljs-watch
 ```
 
-If everything is working, you can access [127.0.0.1:3000/api/countries](127.0.0.1:3000/api/countries) and you'll see some JSON:
+If everything is working, you can access (http://127.0.0.1:3000/api/countries) and you'll see some JSON:
 
 ```json
 {
