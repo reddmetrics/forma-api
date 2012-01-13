@@ -65,6 +65,7 @@ Use two terminals. In the first:
 ```bash
 cd forma-api
 lein deps
+# be sure {redis install location}/src is available in your PATH
 redis-server
 lein ring server    
 ```
