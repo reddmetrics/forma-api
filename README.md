@@ -52,6 +52,12 @@ Next install cljs-watch. This is a small script that watches your source directo
 * Place it on your path. (I like to use `~/bin`)
 * Set it to be executable. (`chmod 755 ~/bin/cljs-watch`)
 
+## Redis 
+
+We use [Redis](http://redis.io) as a really fast key-value datastore for caching.
+
+To install Redis 2.2+, You can [download it here](http://redis.io/download) or you can use `brew install redis`.
+  
 # Usage
 
 Use two terminals. In the first:
