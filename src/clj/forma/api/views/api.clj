@@ -26,7 +26,7 @@
   (redis/init {:url (System/getenv "REDISTOGO_URL")}))
 
 (defn cache-get
-  "Gets the value for a key from the cache or nil if the key doesn't exits."
+  "Gets the value for a key from the cache or nil if the key doesn't exist."
   [key]
   (redis/get db key))
 
