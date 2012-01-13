@@ -1,4 +1,4 @@
-(ns forma-api.views.common
+(ns forma.api.views.common
     (:use [noir.core :only (defpartial)]
         [hiccup.page-helpers :only (include-css html5)]))
 
@@ -9,6 +9,6 @@
             :content "width=device-width, initial-scale=1.0, user-scalable=no"}]
     [:meta {:content "text/html;charset=UTF-8"
             :http-equiv "content-type"}]
-    [:title "forma-api"]
+    [:title "Forma API"]
     (include-css "/css/reset.css")]
    [:body content]))

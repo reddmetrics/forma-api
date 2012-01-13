@@ -1,15 +1,15 @@
 ;; This namespace provides a frontend API to FORMA data.
 ;; TODO: Move API logic into model
 ;;
-(ns forma-api.views.api
+(ns forma.api.views.api
   (:use [noir.core :only (defpage)]
         [noir.options :only (dev-mode?)]
         [clojure.data.json :only (json-str write-json read-json)]
         [hiccup.page-helpers :only (include-js javascript-tag)])
-  (:require clojure.data.json)
-  (:require [redis.core :as redis])
-  (:require [noir.response :as response])
-  (:require [forma-api.views.common :as common]))
+  (:require clojure.data.json
+            [clj-redis.client :as redis]
+            [noir.response :as response]
+            [forma.api.views.common :as common]))
 
 (defpage "/api" []
   "The API landing page that provides some links and information about the API."
@@ -21,17 +21,19 @@
    [:div.written
     [:p "TODO: API landing page content."]]))
 
+(def db
+  "If REDISTOGO_URL isn't defined, redis will default to local mode."
+  (redis/init {:url (System/getenv "REDISTOGO_URL")}))
+
 (defn cache-get
   "Gets the value for a key from the cache or nil if the key doesn't exits."
   [key]
-  (redis/with-server {:host "127.0.0.1" :port 6379 :db 0}
-    (redis/get key)))
+  (redis/get db key))
 
 (defn cache-put
   "Puts a key/value into the cache."
   [key value]
-  (redis/with-server {:host "127.0.0.1" :port 6379 :db 0}
-    (redis/set key value)))
+  (redis/set db key value))
 
 (defn countries-from-elephantdb
   "Stub for a function that pulls country deforestation aggregates from

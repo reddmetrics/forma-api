@@ -1,11 +1,11 @@
-(ns forma-api.server
+(ns forma.api.server
   (:require [noir.server :as server]))
 
-(server/load-views "src/clj/forma_api/views/")
+(server/load-views "src/clj/forma/api/views/")
 
 (defn mk-opts [mode]
   {:mode (keyword (or mode :dev))
-   :ns 'forma-api})
+   :ns 'forma.api})
 
 (def handler
   "Handler for the forma-api server."

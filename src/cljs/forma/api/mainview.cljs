@@ -1,4 +1,4 @@
-(ns forma-api.mainview
+(ns forma.api.mainview
   (:require [goog.events :as events]))
 
 (defn page-load []
