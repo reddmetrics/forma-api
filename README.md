@@ -85,3 +85,20 @@ If everything is working, you can access (http://127.0.0.1:3000/api/countries) a
   }
 }
 ```
+
+# Notes about Redis 
+
+A quick note when developing with Redis. Remember that JSON responses are cached in Redis. If you're seeing strange behavior with JSON values, use the `redis-cli` tool to flush the database:
+
+```bash
+redis-cli
+redis 127.0.0.1:6379> FLUSHALL
+```
+
+You can also use `redis-cli` to inspect keys and values:
+
+```bash
+redis-cli
+redis 127.0.0.1:6379> get "/api/countries"
+"{\"period\":{\"year\":2012,\"month\":1},\"countries\":{\"indonesia\":1,\"brazil\":1,\"malaysia\":1}}"
+```
