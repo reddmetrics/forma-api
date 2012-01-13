@@ -37,8 +37,9 @@ Next install Leiningen, the build tool for Clojure.
 
 Next install ClojureScript. Pick a root directory (`rootdir`) where you want clojureScript to live and run the following commands:
 
+[Download ClojureScript bootstrap script](https://github.com/sritchie/contour/blob/develop/bootstrap.sh)
+
 ```bash
-cd forma-api # from above
 sh bootstrap.sh /path/to/rootdir
 ```
 
