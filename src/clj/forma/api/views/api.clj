@@ -38,8 +38,7 @@
   [key value]
   (redis/set db key value))
 
-
-(defpage "/api/countries" []
+(defn get-countries []
   (let [key "/api/countries"
           content (cache-get key)]
     (if content
@@ -49,17 +48,16 @@
           (cache-put key content)
           content))))
 
-(defpage "/api/:iso" {:keys [iso]}
-  (json-str
-   ((keyword iso) country-level-data)))
+(defpage "/api/:iso-or-countries" {:keys [iso-or-countries]}
+  (if (= iso-or-countries "countries")
+    (get-countries)
+    (let [iso iso-or-countries]
+      (json-str ((keyword iso) mock/country-level-data)))))
 
-(defpage "/api/:iso/provinces" {:keys [iso]}
-  (json-str
-   ((keyword iso) mock/province-level-data)))
-
-(defpage "/api/:iso/:prov-id" {:keys [iso prov-id]}
-  (json-str
-   ((keyword prov-id)
-    (:provinces
-     ((keyword iso) mock/province-level-data)))))
-
+(defpage "/api/:iso/:prov-id-or-provinces" {:keys [iso prov-id-or-provinces]}
+  (if (= prov-id-or-provinces "provinces")
+    (json-str ((keyword iso) mock/province-level-data))
+    (let [prov-id prov-id-or-provinces]
+      (json-str ((keyword prov-id-or-provinces)
+                 (:provinces
+                  ((keyword iso) mock/province-level-timeseries)))))))

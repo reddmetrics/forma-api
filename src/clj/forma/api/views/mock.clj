@@ -4,12 +4,22 @@
   "Stub for a function that pulls country deforestation aggregates from
   ElephantDB."
   []
-  {:countries {:brazil 1 :indonesia 1 :malaysia 3}
-   :period {:year 2012 :month 1}})
+  {:countries {:brazil {:index 5
+                        :iso "BRA"
+                        :name "Brazil"}
+               :indonesia {:index 4
+                           :iso "IDN"
+                           :name "Indonesia"}
+               :malaysia {:index 4
+                          :iso "MYS"
+                          :name "Malaysia"}}
+   :start {:year 2012 :month 1}
+   :end {:year 2012 :month 1}})
 
 (def countries
   {:countries {:brazil 1 :indonesia 1 :malaysia 3}
    :period {:year 2012 :month 1}})
+
 (def country-level-data 
   {:idn
    {:name "Indonesia"
@@ -75,7 +85,7 @@
     :start {:year 2011 :month 12}
     :end {:year 2011 :month 12}}})
 
-(def province-level-data
+(def province-level-timeseries
   {:idn
    {:provinces
     {:1285
