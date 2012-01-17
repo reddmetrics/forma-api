@@ -38,26 +38,49 @@
   [key value]
   (redis/set db key value))
 
-(defn get-countries []
-  (let [key "/api/countries"
-          content (cache-get key)]
+(defn get-countries
+  "Get fake data for all countries"
+  []
+  (mock/countries-from-elephantdb))
+
+(defn get-iso
+  "Get fake data for an iso code"
+  [iso]
+  (keyword iso) mock/country-level-data)
+
+(defn get-prov-id
+  "Get fake data for a province id"
+  [iso prov-id]
+  ((keyword prov-id)
+   (:provinces
+    ((keyword iso) mock/province-level-timeseries))))
+
+(defn get-provinces
+  "Get fake data for all provinces for a given iso code"
+  [iso]
+  ((keyword iso) mock/province-level-data))
+
+
+(defpage "/api/:iso-or-countries" {:keys [iso-or-countries]}
+  (let [key (format "/api/%s" iso-or-countries) 
+        content (cache-get key)]
     (if content
         content
-        (let [data (mock/countries-from-elephantdb)
+        (let [data (if (= iso-or-countries "countries")
+                     (get-countries)
+                     (get-iso iso-or-countries))
               content (json-str data)]
           (cache-put key content)
           content))))
 
-(defpage "/api/:iso-or-countries" {:keys [iso-or-countries]}
-  (if (= iso-or-countries "countries")
-    (get-countries)
-    (let [iso iso-or-countries]
-      (json-str ((keyword iso) mock/country-level-data)))))
-
 (defpage "/api/:iso/:prov-id-or-provinces" {:keys [iso prov-id-or-provinces]}
-  (if (= prov-id-or-provinces "provinces")
-    (json-str ((keyword iso) mock/province-level-data))
-    (let [prov-id prov-id-or-provinces]
-      (json-str ((keyword prov-id-or-provinces)
-                 (:provinces
-                  ((keyword iso) mock/province-level-timeseries)))))))
+  (let [key (format "/api/%s/%s" iso prov-id-or-provinces )
+        content (cache-get key)]
+    (if content
+      content
+      (let [data (if (= prov-id-or-provinces "provinces")
+                   (get-provinces iso)
+                   (get-prov-id iso prov-id-or-provinces))
+            content (json-str data)]
+        (cache-put key content)
+        content))))
