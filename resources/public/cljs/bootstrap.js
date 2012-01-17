@@ -8027,8 +8027,9 @@ cljs.core.get_method = function(a, b) {
 cljs.core.prefers = function(a) {
   return cljs.core._prefers.call(null, a)
 };
-var forma_api = {mainview:{}};
-forma_api.mainview.page_load = function() {
+var forma = {api:{}};
+forma.api.mainview = {};
+forma.api.mainview.page_load = function() {
   return"Do some initial stuff."
 };
-goog.events.listen.call(null, window, "load", forma_api.mainview.page_load);
+goog.events.listen.call(null, window, "load", forma.api.mainview.page_load);

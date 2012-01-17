@@ -5,11 +5,14 @@
   (:use [noir.core :only (defpage)]
         [noir.options :only (dev-mode?)]
         [clojure.data.json :only (json-str write-json read-json)]
-        [hiccup.page-helpers :only (include-js javascript-tag)])
+        [hiccup.page-helpers :only (include-js javascript-tag)]
+        [clojure.string :only [split]]
+        )
   (:require clojure.data.json
             [clj-redis.client :as redis]
             [noir.response :as response]
-            [forma.api.views.common :as common]))
+            [forma.api.views.common :as common]
+            [forma.api.views.mock :as mock]))
 
 (defpage "/api" []
   "The API landing page that provides some links and information about the API."
@@ -35,29 +38,28 @@
   [key value]
   (redis/set db key value))
 
-(defn countries-from-elephantdb
-  "Stub for a function that pulls country deforestation aggregates from
-  ElephantDB."
-  []
-  {:countries {:brazil 1 :indonesia 1 :malaysia 1}
-   :period {:year 2012 :month 1}})
 
 (defpage "/api/countries" []
-  "Returns a JSON representation of deforestation aggregates for all countries
-   in the most recent period."
-    (let [key "/api/countries"
+  (let [key "/api/countries"
           content (cache-get key)]
-      (if content
+    (if content
         content
-        (let [data (countries-from-elephantdb)
+        (let [data (mock/countries-from-elephantdb)
               content (json-str data)]
           (cache-put key content)
           content))))
 
+(defpage "/api/:iso" {:keys [iso]}
+  (json-str
+   ((keyword iso) country-level-data)))
 
+(defpage "/api/:iso/provinces" {:keys [iso]}
+  (json-str
+   ((keyword iso) mock/province-level-data)))
 
-
-
-
-
+(defpage "/api/:iso/:prov-id" {:keys [iso prov-id]}
+  (json-str
+   ((keyword prov-id)
+    (:provinces
+     ((keyword iso) mock/province-level-data)))))
 
