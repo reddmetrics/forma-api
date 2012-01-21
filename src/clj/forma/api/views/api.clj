@@ -4,10 +4,10 @@
 (ns forma.api.views.api
   (:use [noir.core :only (defpage)]
         [noir.options :only (dev-mode?)]
+        [clojure.core.memoize :only (memo-lru)]
         [clojure.data.json :only (json-str write-json read-json)]
         [hiccup.page-helpers :only (include-js javascript-tag)]
-        [clojure.string :only [split]]
-        )
+        [clojure.string :only (split)])
   (:require clojure.data.json
             [clj-redis.client :as redis]
             [noir.response :as response]
@@ -46,7 +46,7 @@
 (defn get-iso
   "Get fake data for an iso code"
   [iso]
-  (keyword iso) mock/country-level-data)
+  (get mock/country-level-data (keyword iso)))
 
 (defn get-prov-id
   "Get fake data for a province id"
@@ -60,27 +60,26 @@
   [iso]
   ((keyword iso) mock/province-level-data))
 
+(defn retrieve-iso* [iso-or-countries]
+  (json-str (if (= iso-or-countries "countries")
+              (get-countries)
+              (get-iso iso-or-countries))))
 
-(defpage "/api/:iso-or-countries" {:keys [iso-or-countries]}
-  (let [key (format "/api/%s" iso-or-countries) 
-        content (cache-get key)]
-    (if content
-        content
-        (let [data (if (= iso-or-countries "countries")
-                     (get-countries)
-                     (get-iso iso-or-countries))
-              content (json-str data)]
-          (cache-put key content)
-          content))))
+(defn retrieve-prov* [iso prov-id-or-provinces]
+  (json-str (if (= prov-id-or-provinces "provinces")
+              (get-provinces iso)
+              (get-prov-id iso prov-id-or-provinces))))
 
-(defpage "/api/:iso/:prov-id-or-provinces" {:keys [iso prov-id-or-provinces]}
-  (let [key (format "/api/%s/%s" iso prov-id-or-provinces )
-        content (cache-get key)]
-    (if content
-      content
-      (let [data (if (= prov-id-or-provinces "provinces")
-                   (get-provinces iso)
-                   (get-prov-id iso prov-id-or-provinces))
-            content (json-str data)]
-        (cache-put key content)
-        content))))
+(def retrieve-iso
+  (memo-lru retrieve-iso* 1000 {}))
+
+(def retrieve-prov
+  (memo-lru retrieve-prov* 1000 {}))
+
+(defpage "/api/:iso-or-countries"
+  {:keys [iso-or-countries]}
+  (retrieve-iso iso-or-countries))
+
+(defpage "/api/:iso/:prov-id-or-provinces"
+  {:keys [iso prov-id-or-provinces]}
+  (retrieve-prov iso prov-id-or-provinces))

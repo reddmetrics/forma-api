@@ -2,6 +2,7 @@
   :description "TODO: Make this pretty!"
   :source-path "src/clj"
   :dependencies [[org.clojure/clojure "1.3.0"]
+                 [org.clojure/core.memoize "0.5.1"]
                  [noir "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
                  [clj-redis "0.0.12"]]
