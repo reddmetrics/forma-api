@@ -1,0 +1,98 @@
+* Version
+Algorithm: 1.0.0-beta
+API: 1.0.0-beta
+
+* Metadata
+Country: BRA
+Probability threshold: 50%
+Dates: 2007-01-01 to 2007-12-31
+Spatial resolution: approx. 500 meters
+Temporal resolution: 16 days
+Published: 2013-05-15
+
+* Introduction
+Thank you for downloading data from Forest Monitoring for Action
+(FORMA), an initiative developed at the Center for Global Development
+and World Resources Institute. 
+
+FORMA is an alerting system that detects probable forest clearing
+activity in the humid tropics using 500m MODIS imagery. The FORMA data
+are generated for each 16-day period since 2005-12-19, and new data
+will be published around the 15th of every month. Data are in the
+public domain (see below).
+
+The FORMA project is open source, and the source code is available
+online:
+
+http://github.com/reddmetrics/forma-clj
+
+A methodology paper is currently under review. Please write us if you
+would like a preview copy. An older version of the algorithm is
+described in this working paper:
+
+http://international.cgdev.org/publication/forma-forest-monitoring-action-rapid-identification-pan-tropical-deforestation-using
+
+We make no claims about the legality of any activity, we simply report
+changes highlighted by the FORMA algorithm. For more disclaimers,
+please see the License and Disclaimer section below.
+
+* Contact
+** Twitter
+@robinkraft
+@econohammer
+@eightysteele
+** Email
+gfw@wri.org
+** Web
+http://www.github.com/reddmetrics/forma-clj
+* Data format
+Every pixel covered by the FORMA algorithm that met or exceeded the
+probability threshold (see metadata) by the dataset publication date
+(see metadata) is included in this file. This archive only contains
+data for the interval noted in the metadata. To download the full
+probability history for each pixel, please download additional years
+of data via the FORMA API:
+
+http://www.forestmonitoring.org
+
+The dataset is stored as a time series in CSV format. That is, each
+row represents a given pixel at a certain date. This is the schema:
+
+lat,lon,iso,gadm2,date,year,prob
+
+where
+
+lat: latitude of pixel centroid
+lon: longitude of pixel centroid
+iso: 3-digit ISO country code
+gadm2: objectid from the GADM v.2 dataset
+date: date in yyyy-mm-dd format
+prob: FORMA probability
+
+For example:
+
+-1,100,IDN,88500,2007-01-01,10
+-1,100,IDN,88500,2007-01-17,15
+...
+-1,100,IDN,88500,2007-12-19,15
+-1,100,IDN,88500,2007-12-19,15
+-1.00416777,100,IDN,88500,2007-01-01,1
+-1.00416777,100,IDN,88500,2007-01-17,20
+...
+-1.00416777,100,IDN,88500,2007-12-19,57
+...
+
+* Probabilities
+* Dates
+The dates in this dataset are derived 
+* License and Disclaimer
+The FORMA data are in the public domain, as established by the CC0 license:
+http://creativecommons.org/publicdomain/zero/1.0/
+
+Please check the CC0 text for a disclaimer about the data.
+
+In short, do whatever you want with the data. Keep in mind that this
+is a beta product, and the data could change at any time. You don't
+have to ask us permission to use the data, but we'd love to hear from
+you if you do something with it, find anything strange, or want to say
+hello.
